@@ -1,0 +1,56 @@
+{
+    "name": "code-redlich/quick-add-cart",
+    "version": "0.0.1",
+    "description": "Add Products via name or product number to cart in checkout or card modal.",
+    "type": "shopware-platform-plugin",
+    "require": {
+        "php" : "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+        "shopware/core": "~6.7.0",
+        "shopware/storefront": "~6.7.0"
+    },
+    "require-dev": {
+        "shopware/dev-tools": "^1.5.1"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "CodeRedlich\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CodeRedlich\\Tests\\": "tests/unit"
+        }
+    },
+    "authors": [
+        {
+            "name": "Michael Kelle",
+            "email": "support@code-redlich.com"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "symfony/runtime": true,
+            "php-http/discovery": true
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "CodeRedlich\\QuickAddCart",
+        "label": {
+            "de-DE": "Schnell zum Warenkorb hinzufügen",
+            "en-GB": "Quick add to cart"
+        },
+        "description": {
+            "de-DE": "Produkte im Warenkorb oder Checkout hinzufügen via Suche mit Produktnummer bzw. Produktnamen",
+            "en-GB": "Quick Add by SKU or Product Name"
+        },
+        "manufacturer": {
+            "de-DE": "Code Redlich",
+            "en-GB": "Code Redlich"
+        },
+        "supportLink": {
+            "de-DE": "https://github.com/CodeRedlich?tab=repositories",
+            "en-GB": "https://github.com/CodeRedlich?tab=repositories"
+        }
+    }
+}

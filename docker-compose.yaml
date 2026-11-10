@@ -1,0 +1,28 @@
+services:
+  shopware:
+    image: dockware/shopware:6.7.15.1
+    ports:
+      - "22:22"
+      - "80:80"
+      - "443:443"
+      - "8888:8888"
+      - "9998:9998"
+      - "9999:9999" #
+    volumes:
+      - "db_volume:/var/lib/mysql"
+      - "media_volume:/var/www/html"
+      - "./:/var/www/html/custom/plugins/QuickAddCart"
+    networks:
+      - web
+    environment:
+      - XDEBUG_ENABLED=1
+
+volumes:
+  db_volume:
+    driver: local
+  media_volume:
+    driver: local
+
+networks:
+  web:
+    external: false

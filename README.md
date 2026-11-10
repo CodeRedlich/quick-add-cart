@@ -1,0 +1,1 @@
+# Shopware Plugin Quick Add Cart
