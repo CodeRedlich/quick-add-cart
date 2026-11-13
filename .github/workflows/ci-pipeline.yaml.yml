@@ -14,11 +14,49 @@ on:
       - master
 
 jobs:
-  pipeline:
-    name: Pipeline
+  check-composer-version:
+    name: Composer version bump
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - name: Print pipeline status
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Compare composer.json versions
+        env:
+          BASE_COMMIT: ${{ github.event.merge_group.base_sha || 'HEAD^1' }}
         run: |
-          echo "Pipeline running....."
-          echo "Pipeline finished...."
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import subprocess
+
+          def read_version(commit, source):
+              manifest = subprocess.run(
+                  ["git", "show", f"{commit}:composer.json"],
+                  capture_output=True, text=True, encoding="utf-8",
+              )
+              if manifest.returncode:
+                  raise SystemExit(f"::error::{source}: cannot read composer.json at {commit}.")
+              try:
+                  version = json.loads(manifest.stdout)["version"]
+              except (ValueError, KeyError, TypeError):
+                  raise SystemExit(f"::error::{source}: composer.json must contain a version.")
+
+              pattern = r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)"
+              match = re.fullmatch(pattern, version) if isinstance(version, str) else None
+              if not match:
+                  raise SystemExit(f"::error::{source}: composer.json version must be in MAJOR.MINOR.PATCH format.")
+              return version, tuple(map(int, match.groups()))
+
+          base_version, base_parts = read_version(os.environ["BASE_COMMIT"], "Target branch")
+          merge_version, merge_parts = read_version("HEAD", "Merge result")
+          if merge_parts <= base_parts:
+              raise SystemExit(
+                  f"::error::Increase composer.json version above {base_version} (found {merge_version})."
+              )
+          print(f"Composer version increased from {base_version} to {merge_version}.")
+          PY

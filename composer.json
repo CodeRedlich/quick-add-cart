@@ -1,6 +1,6 @@
 {
     "name": "code-redlich/quick-add-cart",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Add Products via name or product number to cart in checkout or card modal.",
     "type": "shopware-platform-plugin",
     "require": {
