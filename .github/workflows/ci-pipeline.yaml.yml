@@ -14,4 +14,11 @@ on:
       - master
 
 jobs:
-
+  pipeline:
+    name: Pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print pipeline status
+        run: |
+          echo "Pipeline running....."
+          echo "Pipeline finished...."
