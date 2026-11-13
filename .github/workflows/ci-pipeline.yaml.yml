@@ -1,0 +1,24 @@
+name: Shopware Plugin CI
+run-name: Run CI Pipeline on ${{ github.event_name }}
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+  merge_group:
+    types:
+      - checks_requested
+    branches:
+      - main
+      - master
+
+jobs:
+  pipeline:
+    name: Pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print pipeline status
+        run: |
+          echo "Pipeline running....."
+          echo "Pipeline finished...."
