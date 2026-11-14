@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>Feature Configuration</title>
+        <title lang="de-DE">Feature Konfiguration</title>
+
+        <input-field type="bool">
+            <name>showAdvancedSearchInOffCanvas</name>
+            <label>Show advanced product search in off-canvas cart</label>
+            <label lang="de-DE">Erweiterte Suche im Warenkorb Off-canvas anzeigen</label>
+            <helpText>Replace add by product number component with advanced search component for products</helpText>
+            <helpText lang="de-DE">Ersetze die "Hinzufügen nach Produktnummer" Komponente mit dem erweiterten Such Komponente für Produkte</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>showAdvancedSearchInCart</name>
+            <label>Show advanced product search in cart</label>
+            <label lang="de-DE">Erweiterte Suche im Warenkorb anzeigen</label>
+            <helpText>Replace add by product number component with advanced search component for products</helpText>
+            <helpText lang="de-DE">Ersetze die "Hinzufügen nach Produktnummer" Komponente mit dem erweiterten Such Komponente für Produkte</helpText>
+        </input-field>
+
+    </card>
+
+    <card>
+        <title>Availability Rule</title>
+        <title lang="de-DE">Verfügbarkeitsregel</title>
+
+        <component name="sw-entity-single-select">
+            <name>availabilityRule</name>
+            <entity>rule</entity>
+            <label>Availability Rule</label>
+            <label lang="de-DE">Verfügbarkeitsregel</label>
+            <helpText>Define a availability rule the plugin functionality</helpText>
+            <helpText lang="de-DE">Hinterlege eine Verfügbarkeitsregel für die Plugin-Funktionalität</helpText>
+        </component>
+
+    </card>
+</config>

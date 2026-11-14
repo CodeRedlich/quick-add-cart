@@ -13,6 +13,13 @@ on:
       - main
       - master
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  SHOPWARE_CLI_IMAGE: shopware/shopware-cli:latest-php-8.4
+
 jobs:
   check-composer-version:
     name: Composer version bump
@@ -60,3 +67,75 @@ jobs:
               )
           print(f"Composer version increased from {base_version} to {merge_version}.")
           PY
+
+  run-unit-test:
+    name: Run PHP unit tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Cache Composer downloads
+        uses: actions/cache@v5
+        with:
+          path: ${{ runner.temp }}/composer-downloads
+          key: ${{ runner.os }}-composer-unit-${{ env.SHOPWARE_CLI_IMAGE }}-${{ hashFiles('composer.json', 'composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-unit-${{ env.SHOPWARE_CLI_IMAGE }}-
+
+      - name: Run unit tests in Docker
+        run: |
+          mkdir -p "$RUNNER_TEMP/composer-downloads"
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE:/checkout:ro" \
+            --volume "$RUNNER_TEMP/composer-downloads:/tmp/composer-cache/files" \
+            --env COMPOSER_CACHE_DIR=/tmp/composer-cache \
+            --env COMPOSER_ALLOW_SUPERUSER=1 \
+            --entrypoint /bin/sh \
+            "$SHOPWARE_CLI_IMAGE" -ec '
+              mkdir /tmp/quick-add-cart
+              cd /tmp/quick-add-cart
+              cp -R /checkout/composer.* /checkout/phpunit.xml /checkout/src /checkout/tests .
+
+              composer install --no-interaction --prefer-dist --no-progress
+              composer check-platform-reqs
+              php vendor/bin/phpunit --configuration phpunit.xml
+            '
+
+  run-extension-verifier:
+    name: Validate extension (${{ matrix.check-against }})
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        check-against: [lowest, highest]
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Cache Composer downloads
+        uses: actions/cache@v5
+        with:
+          path: ${{ runner.temp }}/composer-downloads
+          key: ${{ runner.os }}-composer-${{ matrix.check-against }}-${{ env.SHOPWARE_CLI_IMAGE }}-${{ hashFiles('composer.json', 'composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-${{ matrix.check-against }}-${{ env.SHOPWARE_CLI_IMAGE }}-
+
+      - name: Run Shopware CLI extension validation
+        env:
+          CHECK_AGAINST: ${{ matrix.check-against }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/composer-downloads"
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE:/extension" \
+            --volume "$RUNNER_TEMP/composer-downloads:/tmp/composer-cache/files" \
+            --env COMPOSER_CACHE_DIR=/tmp/composer-cache \
+            --workdir /extension \
+            "$SHOPWARE_CLI_IMAGE" \
+            extension validate . --check-against "$CHECK_AGAINST" --reporter github

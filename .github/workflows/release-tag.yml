@@ -1,0 +1,53 @@
+name: Tag merged release
+
+on:
+  pull_request_target:
+    types:
+      - closed
+
+    branches:
+      - main
+      - master
+
+jobs:
+  tag-release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Tag the merged commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MERGED_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          set -euo pipefail
+
+          if [[ ! "$MERGED_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Missing or invalid merge commit SHA."
+            exit 1
+          fi
+
+          manifest=$(gh api "repos/$GITHUB_REPOSITORY/contents/composer.json?ref=$MERGED_SHA" \
+            -H 'Accept: application/vnd.github.raw+json')
+          version_pattern='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'
+          if ! version=$(jq -er '.version | strings' <<< "$manifest") || [[ ! "$version" =~ $version_pattern ]]; then
+            echo "::error::composer.json must contain a version in MAJOR.MINOR.PATCH format."
+            exit 1
+          fi
+
+          tag="v$version"
+          if result=$(gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" \
+            -f "ref=refs/tags/$tag" -f "sha=$MERGED_SHA" --silent 2>&1); then
+            echo "Created $tag at $MERGED_SHA."
+          elif existing=$(gh api "repos/$GITHUB_REPOSITORY/commits/refs/tags/$tag" --jq '.sha'); then
+            if [[ "$existing" != "$MERGED_SHA" ]]; then
+              echo "::error::Tag $tag already points to $existing. Expected $MERGED_SHA."
+              exit 1
+            fi
+            echo "Tag $tag already points to $MERGED_SHA."
+          else
+            printf '%s\n' "$result" >&2
+            exit 1
+          fi
