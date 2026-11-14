@@ -1,0 +1,16 @@
+{% sw_extends "@Storefront/storefront/component/checkout/offcanvas-cart.html.twig" %}
+
+{% block component_offcanvas_cart_actions_promotion %}
+
+    {% if context
+        and context is instanceof('Shopware\\Core\\System\\SalesChannel\\SalesChannelContext')
+        and quickAddIsEnabled(context)
+        and config('QuickAddCart.config.showAdvancedSearchInOffCanvas') %}
+
+        {{ dump("feature") }}
+
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+
+{% endblock %}

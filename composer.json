@@ -1,6 +1,6 @@
 {
     "name": "code-redlich/quick-add-cart",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Add Products via name or product number to cart in checkout or card modal.",
     "type": "shopware-platform-plugin",
     "require": {
@@ -24,7 +24,7 @@
     },
     "authors": [
         {
-            "name": "Michael Kelle",
+            "name": "CodeRedlich",
             "email": "support@code-redlich.com"
         }
     ],
@@ -41,16 +41,20 @@
             "en-GB": "Quick add to cart"
         },
         "description": {
-            "de-DE": "Produkte im Warenkorb oder Checkout hinzufügen via Suche mit Produktnummer bzw. Produktnamen",
-            "en-GB": "Quick Add by SKU or Product Name"
+            "de-DE": "Füge Produkte per Artikelnummer oder Name direkt zum Shopware-Warenkorb hinzu. Die Suche ist im Warenkorb und im Offcanvas verfügbar und lässt sich per Regel steuern.",
+            "en-GB": "Add products to your Shopware cart by product number or name. The search is available on the cart page and in the off-canvas cart, and can be controlled by a rule."
         },
         "manufacturer": {
             "de-DE": "Code Redlich",
             "en-GB": "Code Redlich"
         },
+        "manufacturerLink": {
+            "de-DE": "https://github.com/CodeRedlich",
+            "en-GB": "https://github.com/CodeRedlich"
+        },
         "supportLink": {
-            "de-DE": "https://github.com/CodeRedlich?tab=repositories",
-            "en-GB": "https://github.com/CodeRedlich?tab=repositories"
+            "de-DE": "https://github.com/CodeRedlich/quick-add-cart",
+            "en-GB": "https://github.com/CodeRedlich/quick-add-cart"
         }
     }
 }
