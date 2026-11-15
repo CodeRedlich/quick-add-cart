@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace CodeRedlich\Storefront\Twig;
+namespace CodeRedlich\QuickAddCart\Storefront\Twig;
 
-use CodeRedlich\Interface\CheckAvailabilityInterface;
-use CodeRedlich\Interface\TwigFunctionTagInterface;
+use CodeRedlich\QuickAddCart\Interface\CheckAvailabilityInterface;
+use CodeRedlich\QuickAddCart\Interface\TwigFunctionTagInterface;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace CodeRedlich\Services;
+namespace CodeRedlich\QuickAddCart\Services;
 
-use CodeRedlich\Interface\CheckAvailabilityInterface;
+use CodeRedlich\QuickAddCart\Interface\CheckAvailabilityInterface;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 

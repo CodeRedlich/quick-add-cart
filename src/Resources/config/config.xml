@@ -33,7 +33,7 @@
             <entity>rule</entity>
             <label>Availability Rule</label>
             <label lang="de-DE">Verfügbarkeitsregel</label>
-            <helpText>Define a availability rule the plugin functionality</helpText>
+            <helpText>Define a availability rule for the plugin functionality</helpText>
             <helpText lang="de-DE">Hinterlege eine Verfügbarkeitsregel für die Plugin-Funktionalität</helpText>
         </component>
 

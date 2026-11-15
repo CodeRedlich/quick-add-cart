@@ -9,4 +9,4 @@ $loader = (new TestBootstrapper())
     ->bootstrap()
     ->getClassLoader();
 
-$loader->addPsr4('CodeRedlich\\Tests\\', __DIR__ . '/unit');
+$loader->addPsr4('CodeRedlich\\QuickAddCart\\Tests\\', __DIR__ . '/unit');

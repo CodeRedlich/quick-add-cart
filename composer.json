@@ -14,12 +14,12 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "CodeRedlich\\": "src/"
+            "CodeRedlich\\QuickAddCart\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "CodeRedlich\\Tests\\": "tests/unit"
+            "CodeRedlich\\QuickAddCart\\Tests\\": "tests/unit"
         }
     },
     "authors": [
@@ -35,7 +35,7 @@
         }
     },
     "extra": {
-        "shopware-plugin-class": "CodeRedlich\\QuickAddCart",
+        "shopware-plugin-class": "CodeRedlich\\QuickAddCart\\QuickAddCart",
         "label": {
             "de-DE": "Schnell zum Warenkorb hinzufügen",
             "en-GB": "Quick add to cart"

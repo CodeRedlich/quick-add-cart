@@ -8,6 +8,6 @@ return static function (ContainerConfigurator $configurator): void {
         ->autowire()
         ->autoconfigure();
 
-    $services->load('CodeRedlich\\', '../../')
+    $services->load('CodeRedlich\\QuickAddCart\\', '../../')
         ->exclude('../../{Resources,Migration}');
 };

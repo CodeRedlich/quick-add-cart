@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace CodeRedlich\Tests\Services;
+namespace CodeRedlich\QuickAddCart\Tests\Services;
 
-use CodeRedlich\Interface\CheckAvailabilityInterface;
-use CodeRedlich\Services\CheckAvailabilityService;
+use CodeRedlich\QuickAddCart\Interface\CheckAvailabilityInterface;
+use CodeRedlich\QuickAddCart\Services\CheckAvailabilityService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

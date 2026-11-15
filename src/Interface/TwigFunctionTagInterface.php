@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace CodeRedlich\Interface;
+namespace CodeRedlich\QuickAddCart\Interface;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('twig.extension')]

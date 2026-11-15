@@ -1,0 +1,26 @@
+{% block cr_quick_add_container %}
+
+    <div class="{{ containerClass }}">
+        {% block cr_quick_add_input_label %}
+            <label class="mb-1" for="{{ 'addProductInput' ~ location|default('') }}">
+                {{ 'codeRedlich.quickAdd.search.label'|trans|sw_sanitize }}
+            </label>
+        {% endblock %}
+
+        {% block cr_quick_add_input_field_container %}
+            <div class="input-group">
+
+                {% block cr_quick_add_input_field%}
+                    <input type="text"
+                           name="searchInput"
+                           class="form-control"
+                           id="{{ 'addProductInput' ~ location|default('') }}"
+                           placeholder="{{ 'header.searchPlaceholder'|trans|striptags }}"
+                           aria-label="{{ 'header.searchPlaceholder'|trans|striptags }}"
+                    >
+                {% endblock %}
+            </div>
+        {% endblock %}
+
+    </div>
+{% endblock %}

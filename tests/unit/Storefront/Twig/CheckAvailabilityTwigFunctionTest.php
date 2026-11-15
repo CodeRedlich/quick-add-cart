@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace CodeRedlich\Tests\Storefront\Twig;
+namespace CodeRedlich\QuickAddCart\Tests\Storefront\Twig;
 
-use CodeRedlich\Interface\CheckAvailabilityInterface;
-use CodeRedlich\Interface\TwigFunctionTagInterface;
-use CodeRedlich\Storefront\Twig\CheckAvailabilityTwigFunction;
+use CodeRedlich\QuickAddCart\Interface\CheckAvailabilityInterface;
+use CodeRedlich\QuickAddCart\Interface\TwigFunctionTagInterface;
+use CodeRedlich\QuickAddCart\Storefront\Twig\CheckAvailabilityTwigFunction;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
