@@ -1,26 +1,54 @@
 {% block cr_quick_add_container %}
+    {% set searchLocation = location|default('checkoutCart') %}
+    {% set widgetId = 'cr-quick-add-search-' ~ searchLocation %}
+    {% set inputId = 'addProductInput' ~ searchLocation %}
+    {% set searchWidgetOptions = {
+        searchWidgetMinChars: shopware.minSearchLength,
+        searchWidgetSelector: '#' ~ widgetId,
+        searchWidgetResultSelector: '#' ~ widgetId ~ '-result',
+        searchWidgetResultListboxSelector: '#' ~ widgetId ~ '-listbox',
+        searchWidgetResultInfoSelector: '#' ~ widgetId ~ '-result-info',
+        searchWidgetCollapseButtonSelector: '#' ~ widgetId ~ ' .js-search-toggle-btn'
+    } %}
 
-    <div class="{{ containerClass }}">
+    <form id="{{ widgetId }}"
+          class="{{ containerClass|default('') }}"
+          action="{{ path('frontend.search.page') }}"
+          method="get"
+          data-search-widget="true"
+          {% block cr_quick_add_config %}
+              data-search-widget-options="{{ searchWidgetOptions|json_encode }}"
+          {% endblock %}
+          data-url="{{ path('frontend.search.suggest', {quickAddLocation: searchLocation}) }}&amp;search=">
         {% block cr_quick_add_input_label %}
-            <label class="mb-1" for="{{ 'addProductInput' ~ location|default('') }}">
+            <label class="mb-1" for="{{ inputId }}">
                 {{ 'codeRedlich.quickAdd.search.label'|trans|sw_sanitize }}
             </label>
         {% endblock %}
 
         {% block cr_quick_add_input_field_container %}
-            <div class="input-group">
-
-                {% block cr_quick_add_input_field%}
-                    <input type="text"
-                           name="searchInput"
+            <div class="input-group position-relative">
+                {% block cr_quick_add_input_field %}
+                    <input type="search"
+                           name="search"
                            class="form-control"
-                           id="{{ 'addProductInput' ~ location|default('') }}"
+                           id="{{ inputId }}"
+                           autocomplete="off"
                            placeholder="{{ 'header.searchPlaceholder'|trans|striptags }}"
-                           aria-label="{{ 'header.searchPlaceholder'|trans|striptags }}"
-                    >
+                           aria-label="{{ 'header.searchPlaceholder'|trans|striptags }}">
                 {% endblock %}
+
+                <button type="button"
+                        class="btn header-search-btn js-search-close-btn"
+                        aria-label="{{ 'header.searchCloseButton'|trans|striptags }}">
+                    {% sw_icon 'x' %}
+                </button>
+                <button type="submit"
+                        class="btn header-search-btn"
+                        aria-label="{{ 'header.searchButton'|trans|striptags }}">
+                    {% sw_icon 'search' %}
+                </button>
             </div>
         {% endblock %}
-
-    </div>
+    </form>
 {% endblock %}

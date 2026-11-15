@@ -1,0 +1,16 @@
+{% sw_extends '@Storefront/storefront/layout/header/search-suggest.html.twig' %}
+
+{% block layout_search_suggest %}
+    {% set searchLocation = app.request.query.all()['quickAddLocation']|default('') %}
+    {% set checkoutCart = constant('CodeRedlich\\QuickAddCart\\Util\\PluginConstants::LOCATION_CHECKOUT_CART') %}
+    {% set offcanvas = constant('CodeRedlich\\QuickAddCart\\Util\\PluginConstants::LOCATION_OFFCANVAS') %}
+
+    {% if searchLocation in [checkoutCart, offcanvas] %}
+        {% sw_include '@QuickAddCart/storefront/plugin/component/search/cr-search-result.html.twig' with {
+            widgetId: 'cr-quick-add-search-' ~ searchLocation,
+            products: page.searchResult.entities
+        } %}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

@@ -22,6 +22,14 @@
             <helpText lang="de-DE">Ersetze die "Hinzufügen nach Produktnummer" Komponente mit dem erweiterten Such Komponente für Produkte</helpText>
         </input-field>
 
+        <input-field type="bool">
+            <name>showOnlyIcon</name>
+            <label>Only Show Cart Icon</label>
+            <label lang="de-DE">Nur Warenkorb-Icon anzeigen</label>
+            <helpText>Shows only the Cart Icon and no "Add to cart Text"</helpText>
+            <helpText lang="de-DE">Zeigt nur das Warenkorb-Icon und kein "Zum Warenkorb hinzufügen" Text</helpText>
+        </input-field>
+
     </card>
 
     <card>
