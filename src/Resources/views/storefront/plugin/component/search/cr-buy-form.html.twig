@@ -1,0 +1,49 @@
+{% sw_extends '@Storefront/storefront/component/buy-widget/buy-widget-form.html.twig' %}
+
+{% block buy_widget_buy_form_inner %}
+    {% set showQuantitySelect = true %}
+
+    <form id="{{ widgetId }}-buy-{{ product.id }}"
+          class="buy-widget w-100 mt-2"
+          action="{{ formAction }}"
+          method="post"
+          {% if searchLocation == constant('CodeRedlich\\QuickAddCart\\Util\\PluginConstants::LOCATION_OFFCANVAS') %}
+              data-add-to-cart="true"
+          {% endif %}
+          {% if product.isCloseout %}
+              data-add-to-cart-options="{{ {
+                  stockAdjustedText: 'component.product.quantitySelect.stockAdjusted'|trans|striptags,
+                  outOfStockText: 'component.product.quantitySelect.outOfStock'|trans|striptags
+              }|json_encode|e('html_attr') }}"
+          {% endif %}>
+        <div class="row g-2 buy-widget-container">
+            {{ block('buy_widget_buy_quantity_container') }}
+            {{ block('buy_widget_buy_redirect_input') }}
+            {{ block('buy_widget_buy_product_buy_info') }}
+            {{ block('buy_widget_product_buy_meta') }}
+            {{ block('buy_widget_buy_button_container') }}
+        </div>
+
+        {% if product.isCloseout %}
+            {{ block('buy_widget_buy_quantity_stock_adjusted_template') }}
+        {% endif %}
+    </form>
+{% endblock %}
+
+{% block buy_widget_buy_redirect_input %}
+    <input type="hidden" name="redirectTo" value="frontend.checkout.cart.page">
+{% endblock %}
+
+{% block buy_widget_buy_button %}
+    {% if config('QuickAddCart.config.showOnlyIcon') %}
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-buy"
+                    title="{{ 'detail.addProduct'|trans|striptags }}"
+                    aria-label="{{ 'detail.addProduct'|trans|striptags }}">
+                {% sw_icon 'cart' %}
+            </button>
+        </div>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

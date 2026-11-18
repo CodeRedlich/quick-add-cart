@@ -1,10 +1,10 @@
 {
     "name": "code-redlich/quick-add-cart",
-    "version": "0.0.2",
+    "version": "1.0.0",
     "description": "Add Products via name or product number to cart in checkout or card modal.",
     "type": "shopware-platform-plugin",
     "require": {
-        "php" : "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+        "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
         "shopware/core": "~6.7.0",
         "shopware/storefront": "~6.7.0"
     },
@@ -14,17 +14,17 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "CodeRedlich\\": "src/"
+            "CodeRedlich\\QuickAddCart\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "CodeRedlich\\Tests\\": "tests/unit"
+            "CodeRedlich\\QuickAddCart\\Tests\\": "tests/unit"
         }
     },
     "authors": [
         {
-            "name": "Michael Kelle",
+            "name": "CodeRedlich",
             "email": "support@code-redlich.com"
         }
     ],
@@ -35,22 +35,33 @@
         }
     },
     "extra": {
-        "shopware-plugin-class": "CodeRedlich\\QuickAddCart",
+        "shopware-plugin-class": "CodeRedlich\\QuickAddCart\\QuickAddCart",
         "label": {
             "de-DE": "Schnell zum Warenkorb hinzufügen",
             "en-GB": "Quick add to cart"
         },
         "description": {
-            "de-DE": "Produkte im Warenkorb oder Checkout hinzufügen via Suche mit Produktnummer bzw. Produktnamen",
-            "en-GB": "Quick Add by SKU or Product Name"
+            "de-DE": "Füge Produkte per Artikelnummer oder Name direkt zum Shopware-Warenkorb hinzu. Die Suche ist im Warenkorb und im Offcanvas verfügbar und lässt sich per Regel steuern.",
+            "en-GB": "Add products to your Shopware cart by product number or name. The search is available on the cart page and in the off-canvas cart, and can be controlled by a rule."
         },
         "manufacturer": {
             "de-DE": "Code Redlich",
             "en-GB": "Code Redlich"
         },
+        "manufacturerLink": {
+            "de-DE": "https://github.com/CodeRedlich",
+            "en-GB": "https://github.com/CodeRedlich"
+        },
         "supportLink": {
-            "de-DE": "https://github.com/CodeRedlich?tab=repositories",
-            "en-GB": "https://github.com/CodeRedlich?tab=repositories"
+            "de-DE": "https://github.com/CodeRedlich/quick-add-cart",
+            "en-GB": "https://github.com/CodeRedlich/quick-add-cart"
         }
+    },
+    "scripts": {
+        "test:unit": "phpunit --configuration phpunit.xml",
+        "test:coverage": [
+            "@php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-clover build/coverage/clover.xml --coverage-html build/coverage/html --coverage-text",
+            "@php tests/check-coverage.php"
+        ]
     }
 }

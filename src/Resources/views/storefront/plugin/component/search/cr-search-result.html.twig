@@ -1,0 +1,29 @@
+<div class="search-suggest" id="{{ widgetId }}-result">
+    <ul class="search-suggest-container"
+        id="{{ widgetId }}-listbox"
+        aria-label="{{ 'header.searchDropdownTitle'|trans|striptags }}">
+        {% for product in products %}
+            <li class="search-suggest-product js-result row">
+                <div class="d-flex flex-wrap justify-content-between py-1">
+                    <a href="{{ seoUrl('frontend.detail.page', {productId: product.id}) }}"
+                       class="search-suggest-product-link col-7">
+                        <span class="search-suggest-product-name col-5">{{ product.translated.name }}</span>
+                    </a>
+                    {% if product.parentId or product.childCount > 0 %}
+                        <a class="btn btn-primary" href="{{ seoUrl('frontend.detail.page', { productId: product.id }) }}"
+                           data-ajax-modal="true" data-url="{{ path('frontend.quick_add_cart.buy_box', { productId: product.id }) }}">
+                            {{ 'codeRedlich.quickAdd.search.chooseVariant'|trans|sw_sanitize }}
+                        </a>
+                    {% elseif product.available and product.calculatedMaxPurchase >= product.minPurchase %}
+                        {% sw_include '@QuickAddCart/storefront/plugin/component/search/cr-buy-form.html.twig' %}
+                    {% endif %}
+                </div>
+                <div class="small text-body-secondary">{{ product.productNumber }}</div>
+            </li>
+        {% else %}
+            <li class="search-suggest-no-result" id="{{ widgetId }}-result-info">
+                {{ 'header.searchNoResult'|trans|sw_sanitize }}
+            </li>
+        {% endfor %}
+    </ul>
+</div>

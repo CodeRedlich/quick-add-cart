@@ -13,6 +13,13 @@ on:
       - main
       - master
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  SHOPWARE_CLI_IMAGE: shopware/shopware-cli:latest-php-8.4
+
 jobs:
   check-composer-version:
     name: Composer version bump
@@ -60,3 +67,129 @@ jobs:
               )
           print(f"Composer version increased from {base_version} to {merge_version}.")
           PY
+
+  run-unit-test:
+    name: Run PHP unit tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: intl, gd, pdo_mysql, zip, bcmath, soap
+          coverage: xdebug
+          tools: composer:v2
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: composer test:coverage
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: php-coverage
+          path: build/coverage/
+
+  run-acceptance-tests:
+    name: Playwright acceptance tests (Shopware 6.7)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: tests/appearence/package-lock.json
+      - name: Start isolated Shopware
+        run: |
+          docker run -d --name shopware -p 80:80 \
+            -e APP_URL=http://localhost -e XDEBUG_ENABLED=0 \
+            dockware/shopware:6.7.15.1
+          ready=false
+          for attempt in $(seq 1 90); do
+            if docker exec shopware test -f /var/www/container.launched && curl --fail --silent http://localhost/ >/dev/null; then
+              ready=true
+              break
+            fi
+            sleep 5
+          done
+          if [ "$ready" != true ]; then docker logs shopware; exit 1; fi
+      - name: Install plugin and compile storefront
+        run: |
+          docker exec shopware mkdir -p /var/www/html/custom/plugins/QuickAddCart
+          docker cp composer.json shopware:/var/www/html/custom/plugins/QuickAddCart/composer.json
+          docker cp src shopware:/var/www/html/custom/plugins/QuickAddCart/src
+          docker exec -u root shopware chown -R www-data:www-data /var/www/html/custom/plugins/QuickAddCart
+          docker exec -u www-data shopware php bin/console plugin:refresh
+          docker exec -u www-data shopware php bin/console plugin:install --activate QuickAddCart
+          docker exec -u www-data shopware bash bin/build-storefront.sh
+          docker exec -u www-data shopware php bin/console theme:compile
+          docker exec -u www-data shopware php bin/console cache:clear
+      - name: Install acceptance tests
+        working-directory: tests/appearence
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          npm run typecheck
+          npm run test:unit
+      - name: Run Playwright
+        working-directory: tests/appearence
+        env:
+          APP_URL: http://localhost/
+          SHOPWARE_ADMIN_USERNAME: admin
+          SHOPWARE_ADMIN_PASSWORD: shopware
+        run: npm test
+      - name: Shopware logs
+        if: failure()
+        run: docker logs shopware
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-results
+          path: |
+            tests/appearence/playwright-report/
+            tests/appearence/test-results/
+            build/coverage/storefront/
+
+  run-extension-verifier:
+    name: Validate extension (${{ matrix.check-against }})
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        check-against: [lowest, highest]
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Cache Composer downloads
+        uses: actions/cache@v5
+        with:
+          path: ${{ runner.temp }}/composer-downloads
+          key: ${{ runner.os }}-composer-${{ matrix.check-against }}-${{ env.SHOPWARE_CLI_IMAGE }}-${{ hashFiles('composer.json', 'composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-${{ matrix.check-against }}-${{ env.SHOPWARE_CLI_IMAGE }}-
+
+      - name: Run Shopware CLI extension validation
+        env:
+          CHECK_AGAINST: ${{ matrix.check-against }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/composer-downloads"
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE:/extension" \
+            --volume "$RUNNER_TEMP/composer-downloads:/tmp/composer-cache/files" \
+            --env COMPOSER_CACHE_DIR=/tmp/composer-cache \
+            --workdir /extension \
+            "$SHOPWARE_CLI_IMAGE" \
+            extension validate . --check-against "$CHECK_AGAINST" --reporter github

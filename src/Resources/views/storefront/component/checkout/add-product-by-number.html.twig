@@ -1,0 +1,19 @@
+{% sw_extends "@Storefront/storefront/component/checkout/add-product-by-number.html.twig" %}
+
+{% block page_checkout_cart_add_product %}
+
+    {% if context
+        and context is instanceof('Shopware\\Core\\System\\SalesChannel\\SalesChannelContext')
+        and quickAddIsEnabled(context)
+        and config('QuickAddCart.config.showAdvancedSearchInCart') %}
+
+        {% sw_include '@QuickAddCart/storefront/plugin/component/search/cr-search-field.html.twig'with {
+            containerClass: 'col-md-5 cart-add-product-container',
+            location: constant('CodeRedlich\\QuickAddCart\\Util\\PluginConstants::LOCATION_CHECKOUT_CART')
+        }%}
+
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+
+{% endblock %}

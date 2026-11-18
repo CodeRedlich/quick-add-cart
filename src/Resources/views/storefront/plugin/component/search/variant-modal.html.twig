@@ -1,0 +1,9 @@
+<div class="js-pseudo-modal-template-title-element">{{ product.translated.name }}</div>
+<div class="js-pseudo-modal-template-content-element">
+    <div data-buy-box="true" data-buy-box-options="{{ { elementId: elementId }|json_encode }}">
+        {% sw_include '@Storefront/storefront/component/buy-widget/buy-widget.html.twig' with {
+            pageType: 'quick_add_cart',
+            totalReviews: 0
+        } %}
+    </div>
+</div>

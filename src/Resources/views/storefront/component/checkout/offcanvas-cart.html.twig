@@ -1,0 +1,19 @@
+{% sw_extends "@Storefront/storefront/component/checkout/offcanvas-cart.html.twig" %}
+
+{% block component_offcanvas_cart_actions_promotion %}
+
+    {% if context
+        and context is instanceof('Shopware\\Core\\System\\SalesChannel\\SalesChannelContext')
+        and quickAddIsEnabled(context)
+        and config('QuickAddCart.config.showAdvancedSearchInOffCanvas') %}
+
+        {% sw_include '@QuickAddCart/storefront/plugin/component/search/cr-search-field.html.twig' with {
+            containerClass: 'col-12 mb-2',
+            location: constant('CodeRedlich\\QuickAddCart\\Util\\PluginConstants::LOCATION_OFFCANVAS')
+        }%}
+
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+
+{% endblock %}

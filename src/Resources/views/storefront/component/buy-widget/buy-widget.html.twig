@@ -1,0 +1,34 @@
+{% sw_extends '@Storefront/storefront/component/buy-widget/buy-widget.html.twig' %}
+
+{% block buy_widget_buy_container %}
+
+    {% if elementId|default('') starts with constant('CodeRedlich\\QuickAddCart\\Storefront\\Controller\\QuickAddCartController::QUICK_ADD_ELEMENT_ID_PREFIX') %}
+        {% block cr_quick_add_product_image %}
+            {% set cover = product.cover.media %}
+            <div class="col-12 col-md-6 mx-auto mb-3 text-center">
+                {% if cover and not cover.isSpatialObject() %}
+                    {% if cover.getMediaType().getName() == 'VIDEO' %}
+                        {% sw_include '@Storefront/storefront/utilities/video.html.twig' with {
+                            media: cover,
+                            attributes: { class: 'img-fluid' }
+                        } %}
+                    {% else %}
+                        {% sw_thumbnails 'cr-quick-add-product-image' with {
+                            media: cover,
+                            sizes: { default: '360px' },
+                            attributes: {
+                                class: 'img-fluid',
+                                alt: cover.translated.alt ?: product.translated.name,
+                                title: cover.translated.title ?: product.translated.name
+                            }
+                        } %}
+                    {% endif %}
+                {% else %}
+                    {% sw_icon 'placeholder' style { size: 'fluid' } %}
+                {% endif %}
+            </div>
+        {% endblock %}
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}
