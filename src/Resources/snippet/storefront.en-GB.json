@@ -2,7 +2,8 @@
   "codeRedlich": {
     "quickAdd": {
       "search": {
-        "label": "Product search"
+        "label": "Product search",
+        "chooseVariant": "Choose Variant"
       }
     }
   }

@@ -5,7 +5,7 @@
     {% if context
         and context is instanceof('Shopware\\Core\\System\\SalesChannel\\SalesChannelContext')
         and quickAddIsEnabled(context)
-        and config('QuickAddCart.config.showAdvancedSearchInOffCanvas') %}
+        and config('QuickAddCart.config.showAdvancedSearchInCart') %}
 
         {% sw_include '@QuickAddCart/storefront/plugin/component/search/cr-search-field.html.twig' with {
             location: constant('CodeRedlich\\QuickAddCart\\Util\\PluginConstants::LOCATION_CHECKOUT_CART'),

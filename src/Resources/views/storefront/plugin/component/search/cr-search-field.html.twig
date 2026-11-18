@@ -11,13 +11,12 @@
         searchWidgetCollapseButtonSelector: '#' ~ widgetId ~ ' .js-search-toggle-btn'
     } %}
 
-    <form id="{{ widgetId }}"
+    <form id="{{ widgetId }}-form" action="{{ path('frontend.search.page') }}" method="get"></form>
+    <div id="{{ widgetId }}"
           class="{{ containerClass|default('') }}"
-          action="{{ path('frontend.search.page') }}"
-          method="get"
-          data-search-widget="true"
+          data-quick-add-search
           {% block cr_quick_add_config %}
-              data-search-widget-options="{{ searchWidgetOptions|json_encode }}"
+              data-quick-add-search-options="{{ searchWidgetOptions|json_encode }}"
           {% endblock %}
           data-url="{{ path('frontend.search.suggest', {quickAddLocation: searchLocation}) }}&amp;search=">
         {% block cr_quick_add_input_label %}
@@ -31,6 +30,7 @@
                 {% block cr_quick_add_input_field %}
                     <input type="search"
                            name="search"
+                           form="{{ widgetId }}-form"
                            class="form-control"
                            id="{{ inputId }}"
                            autocomplete="off"
@@ -38,17 +38,13 @@
                            aria-label="{{ 'header.searchPlaceholder'|trans|striptags }}">
                 {% endblock %}
 
-                <button type="button"
-                        class="btn header-search-btn js-search-close-btn"
-                        aria-label="{{ 'header.searchCloseButton'|trans|striptags }}">
-                    {% sw_icon 'x' %}
-                </button>
-                <button type="submit"
+                {{ sw_block('layout_header_close_button', '@Storefront/storefront/layout/header/search.html.twig')|raw }}
+                <button type="submit" form="{{ widgetId }}-form"
                         class="btn header-search-btn"
                         aria-label="{{ 'header.searchButton'|trans|striptags }}">
                     {% sw_icon 'search' %}
                 </button>
             </div>
         {% endblock %}
-    </form>
+    </div>
 {% endblock %}

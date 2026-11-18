@@ -51,3 +51,9 @@ jobs:
             printf '%s\n' "$result" >&2
             exit 1
           fi
+
+  # GITHUB_TOKEN tags do not start a separate tag-push workflow.
+  update-packagist:
+    needs: tag-release
+    uses: ./.github/workflows/packagist-update.yml
+    secrets: inherit

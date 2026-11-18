@@ -5,10 +5,10 @@
     {% if context
         and context is instanceof('Shopware\\Core\\System\\SalesChannel\\SalesChannelContext')
         and quickAddIsEnabled(context)
-        and config('QuickAddCart.config.showAdvancedSearchInOffCanvas') %}
+        and config('QuickAddCart.config.showAdvancedSearchInCart') %}
 
         {% sw_include '@QuickAddCart/storefront/plugin/component/search/cr-search-field.html.twig'with {
-            containerClass: 'col-md-5',
+            containerClass: 'col-md-5 cart-add-product-container',
             location: constant('CodeRedlich\\QuickAddCart\\Util\\PluginConstants::LOCATION_CHECKOUT_CART')
         }%}
 

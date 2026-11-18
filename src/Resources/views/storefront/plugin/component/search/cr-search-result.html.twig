@@ -9,14 +9,14 @@
                        class="search-suggest-product-link col-7">
                         <span class="search-suggest-product-name col-5">{{ product.translated.name }}</span>
                     </a>
-                     <button class="btn btn-primary"
-                             aria-label="{{ 'detail.addProduct'|trans|striptags }}">
-                         {% if config('QuickAddCart.config.showOnlyIcon') %}
-                             {% sw_icon 'cart' %}
-                         {% else %}
-                            {{ 'detail.addProduct'|trans|sw_sanitize }}
-                         {% endif %}
-                     </button>
+                    {% if product.parentId or product.childCount > 0 %}
+                        <a class="btn btn-primary" href="{{ seoUrl('frontend.detail.page', { productId: product.id }) }}"
+                           data-ajax-modal="true" data-url="{{ path('frontend.quick_add_cart.buy_box', { productId: product.id }) }}">
+                            {{ 'codeRedlich.quickAdd.search.chooseVariant'|trans|sw_sanitize }}
+                        </a>
+                    {% elseif product.available and product.calculatedMaxPurchase >= product.minPurchase %}
+                        {% sw_include '@QuickAddCart/storefront/plugin/component/search/cr-buy-form.html.twig' %}
+                    {% endif %}
                 </div>
                 <div class="small text-body-secondary">{{ product.productNumber }}</div>
             </li>

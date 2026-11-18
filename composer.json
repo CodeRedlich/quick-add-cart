@@ -1,10 +1,10 @@
 {
     "name": "code-redlich/quick-add-cart",
-    "version": "0.0.3",
+    "version": "1.0.0",
     "description": "Add Products via name or product number to cart in checkout or card modal.",
     "type": "shopware-platform-plugin",
     "require": {
-        "php" : "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+        "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
         "shopware/core": "~6.7.0",
         "shopware/storefront": "~6.7.0"
     },
@@ -56,5 +56,12 @@
             "de-DE": "https://github.com/CodeRedlich/quick-add-cart",
             "en-GB": "https://github.com/CodeRedlich/quick-add-cart"
         }
+    },
+    "scripts": {
+        "test:unit": "phpunit --configuration phpunit.xml",
+        "test:coverage": [
+            "@php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-clover build/coverage/clover.xml --coverage-html build/coverage/html --coverage-text",
+            "@php tests/check-coverage.php"
+        ]
     }
 }

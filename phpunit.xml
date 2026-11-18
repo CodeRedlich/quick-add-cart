@@ -2,7 +2,9 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/13.4/phpunit.xsd"
          bootstrap="vendor/autoload.php"
-         executionOrder="random">
+         executionOrder="random"
+         failOnWarning="true"
+         failOnRisky="true">
     <source>
         <include>
             <directory>./src/</directory>
@@ -12,11 +14,8 @@
         <ini name="error_reporting" value="-1"/>
     </php>
     <testsuites>
-        <testsuite name="Services">
-            <directory>tests/unit/Services</directory>
-        </testsuite>
-        <testsuite name="Twig">
-            <directory>tests/unit/Storefront/Twig</directory>
+        <testsuite name="Unit">
+            <directory>tests/unit</directory>
         </testsuite>
     </testsuites>
 </phpunit>

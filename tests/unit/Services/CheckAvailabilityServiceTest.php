@@ -43,6 +43,9 @@ final class CheckAvailabilityServiceTest extends TestCase
         yield 'no configured rule' => ['', [], true];
         yield 'configured rule is active' => ['configured-rule', ['other-rule', 'configured-rule'], true];
         yield 'configured rule is absent' => ['configured-rule', ['other-rule'], false];
+        yield 'comparison is strict' => ['123', [123], false];
+        yield 'comparison is case sensitive' => ['configured-rule', ['CONFIGURED-RULE'], false];
+        yield 'no rule with active rules' => ['', ['other-rule'], true];
         yield 'no active rules' => ['configured-rule', [], false];
     }
 }

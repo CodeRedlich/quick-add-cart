@@ -1,0 +1,28 @@
+name: Update Packagist
+on:
+  workflow_call:
+  workflow_dispatch:
+  release:
+    types: [published]
+permissions: {}
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Packagist
+        env:
+          PACKAGIST_USERNAME: ${{ secrets.PACKAGIST_USERNAME }}
+          PACKAGIST_API_TOKEN: ${{ secrets.PACKAGIST_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$PACKAGIST_USERNAME" || -z "$PACKAGIST_API_TOKEN" ]]; then
+            echo "::error::Configure PACKAGIST_USERNAME and PACKAGIST_API_TOKEN after submitting the package to Packagist."
+            exit 1
+          fi
+          response=$(curl --fail-with-body --silent --show-error --request POST \
+            --url "https://packagist.org/api/update-package" \
+            --url-query "username=$PACKAGIST_USERNAME" \
+            --url-query "apiToken=$PACKAGIST_API_TOKEN" \
+            --header 'Content-Type: application/json' \
+            --data "$(jq -nc --arg url "https://github.com/$GITHUB_REPOSITORY" '{repository: $url}')")
+          jq -e '.status == "success"' <<< "$response"

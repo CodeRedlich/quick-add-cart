@@ -3,3 +3,10 @@
 
 composer.lock
 vendor
+
+node_modules/
+build/
+.phpunit.cache/
+tests/appearence/playwright-report/
+tests/appearence/test-results/
+.phpunit.result.cache
